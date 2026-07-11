@@ -1,0 +1,39 @@
+# Cuan Driver — Cloudflare Workers config
+# Deploy guide: docs/DEPLOYMENT.md
+name = "cuan-driver"
+main = "worker/index.ts"
+compatibility_date = "2025-08-01"
+
+# Static PWA served by Workers Assets; only /api/* hits the Worker.
+[assets]
+directory = "dist/web"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cuan-driver-db"
+# Replace with the id printed by: wrangler d1 create cuan-driver-db
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "SCREENSHOTS"
+bucket_name = "cuan-driver-screenshots"
+
+[vars]
+# Vision model for screenshot parsing. Cheap by design (prompt requirement:
+# "use smaller models where possible"). Override per-env if needed.
+ANTHROPIC_MODEL = "claude-haiku-4-5"
+# Public URL of the app (used in share cards / QR codes).
+APP_URL = "https://cuan-driver.example.workers.dev"
+# When "true": accepts the demo license code CUAN-DEMO-2026 (7 days Pro).
+# Keep "false" in production.
+DEMO_MODE = "false"
+
+# Secrets (NOT here — set via `wrangler secret put <NAME>` or .dev.vars):
+#   JWT_SECRET          — required in production (openssl rand -base64 32)
+#   ADMIN_TOKEN         — enables /api/admin/* + /admin dashboard
+#   ANTHROPIC_API_KEY   — enables real AI scan; empty = mock mode (still demoable)
+#   ANTHROPIC_BASE_URL  — optional API endpoint override
