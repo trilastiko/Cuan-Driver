@@ -28,6 +28,9 @@ export function BepGaugeView({ g, totalCost }: { g: BepGauge; totalCost: number 
   const fillFrac = Math.min(1, (Math.min(g.coverage, 1.5) / 1.5));
   const label = PACE_LABEL[g.pace];
   const pctCovered = Math.round(g.coverage * 100);
+  // Jam belum diisi: warnai fill berdasarkan progres biaya, bukan abu-abu.
+  const fillClass =
+    g.pace !== 'unknown' ? g.pace : g.coverage >= 1 ? 'above' : g.coverage > 0 ? 'near' : 'unknown';
   return (
     <div
       role="img"
@@ -39,7 +42,7 @@ export function BepGaugeView({ g, totalCost }: { g: BepGauge; totalCost: number 
       </div>
       <div className="gauge-track">
         <div
-          className={`gauge-fill ${g.pace}`}
+          className={`gauge-fill ${fillClass}`}
           style={{ width: `${Math.max(2, fillFrac * 100)}%` }}
         />
         <div className="gauge-bep" style={{ left: `${BEP_AT * 100}%` }}>
