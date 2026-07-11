@@ -43,4 +43,18 @@ const out = join(dist, 'cuan-driver-demo.html');
 writeFileSync(out, html);
 const kb = Math.round(Buffer.byteLength(html) / 1024);
 console.log(`✔ Demo satu-file: ${out} (${kb} KB)`);
+
+// Varian "artifact": konten level-body saja (host halaman menyediakan
+// doctype/head/body sendiri). Title + viewport tetap disertakan.
+const artifact = html
+  .replace(/<!doctype html>\s*/i, '')
+  .replace(/<html[^>]*>\s*/i, '')
+  .replace(/<\/html>\s*/i, '')
+  .replace(/<head>\s*/i, '')
+  .replace(/<\/head>\s*/i, '')
+  .replace(/<body>\s*/i, '')
+  .replace(/<\/body>\s*/i, '')
+  .replace(/<meta charset[^>]*>\s*/i, '');
+writeFileSync(join(dist, 'cuan-driver-artifact.html'), artifact);
+console.log(`✔ Varian artifact: ${join(dist, 'cuan-driver-artifact.html')}`);
 for (const f of readdirSync(dist)) console.log('  -', f);
