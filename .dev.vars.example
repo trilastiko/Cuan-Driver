@@ -1,0 +1,22 @@
+# Copy to .dev.vars for local development (wrangler dev reads it automatically).
+# NEVER commit .dev.vars — it is gitignored.
+
+# JWT signing secret. Generate: openssl rand -base64 32
+# If left empty, the worker generates an ephemeral per-boot secret (dev only —
+# sessions reset when the worker restarts).
+JWT_SECRET=
+
+# Token for the /admin dashboard and /api/admin/* endpoints.
+# Generate: openssl rand -hex 16. If empty, admin endpoints are disabled.
+ADMIN_TOKEN=dev-admin-token
+
+# Anthropic API key for real AI screenshot parsing.
+# Leave EMPTY to run in mock mode — the whole app stays fully demoable.
+ANTHROPIC_API_KEY=
+
+# Optional overrides
+# ANTHROPIC_BASE_URL=https://api.anthropic.com
+# ANTHROPIC_MODEL=claude-haiku-4-5
+
+# Accept demo license code CUAN-DEMO-2026 (7 days Pro) — dev/demo only.
+DEMO_MODE=true
